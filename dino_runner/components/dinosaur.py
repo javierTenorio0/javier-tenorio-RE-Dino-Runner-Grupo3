@@ -52,6 +52,7 @@ class Dinosour(Sprite):
         self.shield_time_up = 0
         self.hammer = None 
         self.hammer_enabled = 0
+        self.type = DEFAULT_TYPE
 
 
     def update(self, user_input):
@@ -81,13 +82,14 @@ class Dinosour(Sprite):
             self.hammer_enabled = max(self.hammer_enabled - 1, 0)
             if self.hammer_enabled == 0:
                 self.update_to_default(HAMMER_TYPE)
+            self.player.setup_state_booleans()
             
         if self.hammer:
             self.hammer.update()
 
         
     def duck(self):
-        self.image = self.duck_img[self.type][self.step_index // 5]
+        self.image = self.duck_img[self.type][self.step_index % 2]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS_DUCK
@@ -125,6 +127,7 @@ class Dinosour(Sprite):
     def update_to_default(self, current_type):
         if self.type == current_type:
             self.type = DEFAULT_TYPE
+        
 
     def event(self):
         pass

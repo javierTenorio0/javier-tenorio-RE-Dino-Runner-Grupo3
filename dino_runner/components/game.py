@@ -3,6 +3,7 @@ import pygame
 from dino_runner.components.dinosaur import Dinosour
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
+from dino_runner.components.background.backgroundManager import BackgroundManager
 from dino_runner.components.player_hearts.player_heart_manager import PlayerHeartManager
 from dino_runner.components import text_utils
 from dino_runner.utils.constants import (BG, FPS, ICON, RUNNING,SCREEN_HEIGHT, SCREEN_WIDTH, TITLE)
@@ -20,6 +21,7 @@ class Game:
         self.y_pos_bg = 380
         self.player = Dinosour()
         self.obstacle_manager = ObstacleManager()
+        self.background_manager = BackgroundManager()
         self.player_heart_manager = PlayerHeartManager()
         self.points = 0
         self.running = True
@@ -36,6 +38,7 @@ class Game:
     
     def create_components(self):
         self.obstacle_manager.reset_obstacles(self)
+        self.background_manager.reset_clouds(self)
         self.player_heart_manager.reset_hearts()
         self.power_up_manager.reset_power_ups(self.points)
         self.points = 0
@@ -57,6 +60,7 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update(self)
+        self.background_manager.update(self)
         self.power_up_manager.update(self.points, self.game_speed, self.player)
 
     def draw(self):
@@ -65,6 +69,7 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
+        self.background_manager.draw(self.screen)
         self.player_heart_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
         pygame.display.update()
@@ -112,6 +117,7 @@ class Game:
             self.screen.blit(text, text_rect)
             self.screen.blit(score, score_text)
             self.screen.blit(death, death_rect)
+            self.player.setup_state_booleans()
             self.points = 0
             self.game_speed = 20
 
